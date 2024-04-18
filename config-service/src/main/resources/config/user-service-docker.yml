@@ -1,0 +1,72 @@
+server:
+  port: 8080
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://discovery-service:8061/eureka/
+  instance:
+    hostname: user-service
+      
+logging:
+  pattern: 
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%X{traceId:-},%X{spanId:-}] ${LOG_LEVEL_PATTERN:-%5p} %m%n"
+
+springdoc:
+  packagesToScan: com.bs.services.user
+
+spring:
+  output:
+    ansi:
+      enabled: always
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: deferred
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: org.postgresql.Driver
+    url: ${DATABASE_URL:jdbc:postgresql://postgresql:5432/bsuser}
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
+    hikari:
+      max-lifetime: ${HIKARI_MAX_LIFETIME:600000}
+      connectionTimeout: ${HIKARI_CONNECTION_TIMEOUT:5000}
+      maximumPoolSize: ${HIKARI_MAX_POOL_SIZE:50}
+      minimumIdle: ${HIKARI_MIN_IDLE:5}
+      idleTimeout: ${HIKARI_IDLE_TIMEOUT:30000}
+      leak-detection-threshold: ${HIKARI_LEAK_DETECTION_THRESHOLD:120000}
+      test-while-idle: ${HIKARI_TEST_WHILE_IDLE:true}
+      test-on-borrow: ${HIKARI_TEST_ON_BORROW:true}
+
+  jpa:
+    open-in-view: true
+    properties:
+      hibernate.id.new_generator_mappings: true
+      hibernate.connection.provider_disables_autocommit: false
+      hibernate.generate_statistics: false
+      hibernate.jdbc.batch_size: 350
+      hibernate.order_inserts: true
+      hibernate.order_updates: true
+      hibernate.batch_versioned_date: true
+      # modify fetch size as necessary
+      hibernate.jdbc.fetch_size: 150
+      hibernate.criteria.literal_handling_mode: BIND
+      hibernate.query.fail_on_pagination_over_collection_fetch: true
+      hibernate.query.in_clause_parameter_padding: true
+      javax.persistence.validation.mode: none
+      hibernate.format_sql: true
+      hibernate.show_sql: true
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans

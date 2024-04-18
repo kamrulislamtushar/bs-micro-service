@@ -1,0 +1,69 @@
+spring:
+  liquibase:
+    enabled: true
+    drop-first: false
+    change-log: classpath:changelog/master.xml
+    default-schema: public
+  application:
+    name: user-service
+  cache:
+    type: redis
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
+    jpa:
+      repositories:
+        bootstrap-mode: deferred
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: org.postgresql.Driver
+    url: ${DATABASE_URL:jdbc:postgresql://postgresql:5432/bsuser}
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
+    hikari:
+      max-lifetime: ${HIKARI_MAX_LIFETIME:600000}
+      connectionTimeout: ${HIKARI_CONNECTION_TIMEOUT:5000}
+      maximumPoolSize: ${HIKARI_MAX_POOL_SIZE:50}
+      minimumIdle: ${HIKARI_MIN_IDLE:5}
+      idleTimeout: ${HIKARI_IDLE_TIMEOUT:30000}
+      leak-detection-threshold: ${HIKARI_LEAK_DETECTION_THRESHOLD:120000}
+      test-while-idle: ${HIKARI_TEST_WHILE_IDLE:true}
+      test-on-borrow: ${HIKARI_TEST_ON_BORROW:true}
+
+  jpa:
+    open-in-view: true
+    properties:
+      hibernate.id.new_generator_mappings: true
+      hibernate.connection.provider_disables_autocommit: false
+      hibernate.generate_statistics: false
+      hibernate.jdbc.batch_size: 350
+      hibernate.order_inserts: true
+      hibernate.order_updates: true
+      hibernate.batch_versioned_date: true
+      # modify fetch size as necessary
+      hibernate.jdbc.fetch_size: 150
+      hibernate.criteria.literal_handling_mode: BIND
+      hibernate.query.fail_on_pagination_over_collection_fetch: true
+      hibernate.query.in_clause_parameter_padding: true
+      javax.persistence.validation.mode: none
+      hibernate.format_sql: true
+      hibernate.show_sql: true
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: my-group-id
+
+
+  config:
+    import: "optional:configserver:http://config-service:8088"
+    activate:
+      on-profile: docker
+
