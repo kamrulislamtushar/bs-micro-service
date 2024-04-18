@@ -1,4 +1,6 @@
 
+
+
 ## Getting Started 
 Currently you may find here some examples of microservices implementation using different projects from Spring Cloud. All the examples are divided into the branches and described in a separated articles on my blog. Here's a full list of available examples:
 1. (This example has been update to the latest version of Spring Cloud without Zuul) Using Spring Cloud Netflix **Eureka** as a discovery server, **Zuul** as a gateway, **OpenFeign** for communication and Spring Cloud Config Server.
@@ -12,9 +14,9 @@ Build the apps with images (we need ji for `config-service` since it contains `c
 $ mvn clean package -Pbuild-image
 ```
 
-Then run all the containers with `docker-compose`:
+Then run all the containers with `docker compose`:
 ```shell
-$ docker-compose up
+$ docker compose up
 ```
 
 In the most cases you need to have Maven and JDK8+. In the fourth example with OpenShift you will have to run **Minishift** on your machine. The best way to run the sample applications is with IDEs like IntelliJ IDEA or Eclipse.  
@@ -27,3 +29,6 @@ Our sample microservices-based system consists of the following modules:
 - **discovery-service** - a module that depending on the example it uses Spring Cloud Netflix Eureka or Spring Cloud Netlix Alibaba Nacos as an embedded discovery server.
 - **user-service** - a module containing the first of our sample microservices that allows to perform CRUD operation on postgres repository of employees
 
+## Comments
+
+The required dependencies and services are present in docker compose file.
